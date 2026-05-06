@@ -25,7 +25,7 @@ export default function StatsTicker() {
   }, { scope: tickerRef });
 
   return (
-    <div ref={tickerRef} className="w-full bg-slate-900 py-10 overflow-hidden border-y border-slate-800">
+    <div ref={tickerRef} className="w-full bg-slate-900 py-8 overflow-hidden border-y border-slate-800">
       <div className="ticker-track flex whitespace-nowrap w-fit">
         
         {/* Renderizamos la lista dos veces para el loop infinito */}

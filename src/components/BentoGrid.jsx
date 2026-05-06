@@ -45,7 +45,6 @@ export default function BentoGrid() {
   const main = useRef();
 
   useGSAP(() => {
-    // Usamos fromTo para evitar que el Strict Mode de React deje las tarjetas invisibles
     gsap.fromTo(".bento-card", 
       { 
         y: 60, 
@@ -68,12 +67,11 @@ export default function BentoGrid() {
   }, { scope: main });
 
   return (
-    /* Cambiamos bg-slate-50 por bg-white para unificar con el resto de la app */
-    <section ref={main} className="py-24 bg-white relative">
+    <section ref={main} className="relative z-10 py-24 bg-transparent">
       <div className="max-w-7xl mx-auto px-6">
         
         {/* Cabecera de Sección */}
-        <div className="mb-16 text-center">
+        <div className="mb-16 text-center relative z-20">
           <span className="text-blue-600 font-semibold tracking-wide uppercase text-sm mb-3 block">
             Ecosistema Integral
           </span>
@@ -85,15 +83,18 @@ export default function BentoGrid() {
           </p>
         </div>
 
-        {/* Grilla Bento: Fondo blanco y bordes suaves */}
+        {/* Grilla Bento */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[180px]">
           {features.map((f, i) => (
             <div 
               key={i} 
               className={`
-                bento-card group relative ${f.size} bg-white
-                p-8 rounded-3xl border border-slate-100 flex flex-col justify-between 
-                shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300
+                bento-card group relative ${f.size} 
+                /* CAMBIO AQUÍ: Glassmorphism premium (bg-white/70 + backdrop-blur) */
+                bg-white/70 backdrop-blur-xl
+                p-8 rounded-3xl border border-white/60 flex flex-col justify-between 
+                shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(37,99,235,0.1)] 
+                hover:-translate-y-1 transition-all duration-300
               `}
             >
               <div className="flex justify-between items-start">
@@ -101,7 +102,7 @@ export default function BentoGrid() {
                   {f.icon}
                 </div>
                 {f.badge && (
-                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-50 text-slate-500 border border-slate-100">
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-white/80 text-slate-500 border border-slate-100 shadow-sm">
                     {f.badge}
                   </span>
                 )}

@@ -1,17 +1,27 @@
-# React + Vite
+# 🚀 LandingPRO: Smartlot
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Bienvenido al repositorio de **Smartlot**, una Landing Page premium, altamente optimizada y diseñada para conversiones. Este proyecto está construido con un enfoque estricto en rendimiento, accesibilidad y animaciones fluidas a 60fps.
 
-Currently, two official plugins are available:
+## 🛠 Tech Stack Principal
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Core:** React 18 + JavaScript (ES6+)
+- **Build Tool:** Vite (para un HMR ultrarrápido y builds optimizados)
+- **Estilos:** Tailwind CSS (Utility-first, responsive, Dark/Light mode ready)
+- **Animaciones:** GSAP (GreenSock Animation Platform) + `@gsap/react`
 
-## React Compiler
+## 📂 Arquitectura del Proyecto
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+El proyecto sigue una estructura modular para escalar de forma predecible:
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# landingPRO_Smartlot
+```text
+src/
+├── components/          # Componentes de UI modulares y reutilizables
+│   ├── Hero.jsx         # Sección principal (Above the fold)
+│   ├── BentoGrid.jsx    # Layout moderno de características (UI/UX Pro Max)
+│   ├── StatsTicker.jsx  # Animación de estadísticas en bucle continuo
+│   ├── Demo.jsx         # Sección interactiva del producto
+│   ├── Contact.jsx      # Formulario de conversión y CTA final
+│   └── Navbar.jsx       # Navegación principal y control de estado
+├── App.jsx              # Composición principal de la landing
+├── main.jsx             # Punto de entrada y providers
+└── index.css            # Directivas de Tailwind y variables CSS globales

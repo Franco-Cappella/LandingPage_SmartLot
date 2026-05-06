@@ -9,11 +9,10 @@ export default function Demo() {
   const container = useRef();
 
   useGSAP(() => {
-    // Animamos el contenedor del iframe para que "crezca" suavemente
     gsap.from(".demo-wrapper", {
       scrollTrigger: {
         trigger: container.current,
-        start: "top 80%", // Empieza cuando el top del componente llega al 80% del viewport
+        start: "top 80%", 
       },
       y: 50,
       scale: 0.95,
@@ -24,7 +23,7 @@ export default function Demo() {
   }, { scope: container });
 
   return (
-    <section id="demo" ref={container} className="py-24 bg-white">
+      <section id="demo" ref={container} className="relative z-10 py-24 bg-transparent">
       <div className="max-w-6xl mx-auto px-6 text-center">
         
         <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
@@ -34,10 +33,10 @@ export default function Demo() {
           Interactuá con nuestro prototipo funcional y descubrí lo fácil que es gestionar espacios con SmartLot.
         </p>
 
-        {/* Contenedor tipo "Ventana de navegador" para el iframe */}
-        <div className="demo-wrapper bg-slate-100 p-2 rounded-[2rem] shadow-2xl border border-slate-200">
-          <div className="bg-white rounded-[1.5rem] overflow-hidden">
-            {/* Cabecera del mockup (puntitos tipo Mac) */}
+        {/* Contenedor tipo "Ventana de navegador" */}
+        <div className="demo-wrapper bg-white/60 backdrop-blur-xl p-2 rounded-[2rem] shadow-2xl border border-white/50">
+          <div className="bg-white rounded-[1.5rem] overflow-hidden shadow-inner">
+            {/* Cabecera del mockup */}
             <div className="h-10 bg-slate-50 border-b border-slate-100 flex items-center px-4 gap-2">
               <div className="w-3 h-3 rounded-full bg-red-400"></div>
               <div className="w-3 h-3 rounded-full bg-amber-400"></div>
