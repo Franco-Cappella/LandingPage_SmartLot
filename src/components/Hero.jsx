@@ -2,23 +2,31 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
-export default function Hero() {
+export default function Hero({ startAnimation }) { 
   const container = useRef();
 
   useGSAP(() => {
-    const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+    if (!startAnimation) return;
+
+    // Agregamos un delay de 0.4s. Como las puertas tardan 1.4s en abrirse, 
+    // esto asegura que haya un "hueco" visual en el medio antes de que los textos suban.
+    const tl = gsap.timeline({ 
+      defaults: { ease: "power4.out" },
+      delay: 0.4 
+    });
     
-    tl.from(".hero-badge", { y: -20, opacity: 0, duration: 0.8 })
+    // Aumenté las duraciones en ~0.4s cada una para que la animación sea más "lenta" y dramática
+    tl.from(".hero-badge", { y: -20, opacity: 0, duration: 1.2 })
       .from(".word", { 
         y: 100, 
         rotateX: -45, 
         opacity: 0, 
-        duration: 1, 
-        stagger: 0.2 
-      }, "-=0.4")
-      .from(".hero-p", { opacity: 0, x: -20, duration: 1 }, "-=0.6")
-      .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.5 }, "-=0.8")
-      .from(".hero-logo-container", { x: 100, opacity: 0, duration: 1.2 }, "-=1");
+        duration: 1.4, // Era 1
+        stagger: 0.25 // Ligeramente más pausado entre palabras
+      }, "-=0.6")
+      .from(".hero-p", { opacity: 0, x: -20, duration: 1.2 }, "-=0.8")
+      .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.8 }, "-=1")
+      .from(".hero-logo-container", { x: 100, opacity: 0, duration: 1.6 }, "-=1.2");
 
     gsap.to(".floating-logo", {
       y: "-=14",
@@ -28,10 +36,12 @@ export default function Hero() {
       repeat: -1
     });
 
-  }, { scope: container });
+  }, { 
+    scope: container,
+    dependencies: [startAnimation] 
+  });
 
   return (
-    // CAMBIO CLAVE: 'bg-white' pasa a 'bg-transparent' y añadimos 'z-10' relativo
     <section ref={container} className="relative pt-32 pb-12 overflow-hidden bg-transparent min-h-[75vh] flex items-center z-10">
       <div className="max-w-7xl mx-auto px-6 w-full relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -57,7 +67,6 @@ export default function Hero() {
           </div>
 
           <div className="hero-logo-container relative flex justify-center lg:justify-end z-20">
-            {/* Glow trasero reducido para no saturar junto con las partículas */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-200 rounded-full blur-[80px] opacity-40 -z-10"></div>
             <img src="/logoEntero.png" alt="SmartLot Dashboard" className="floating-logo w-full max-w-[500px] h-auto" />
           </div>
@@ -66,4 +75,4 @@ export default function Hero() {
       </div>
     </section>
   );
-}   
+}
