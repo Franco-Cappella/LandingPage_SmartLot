@@ -9,10 +9,10 @@ import InteractiveBackground from './components/InteractiveBackground';
 import IntroAnimation from './components/IntroAnimation';
 
 export default function App() {
-  // Estado 1: Destruye el componente de la intro para liberar memoria
+  // Estado 1: Para destruir el componente de la intro al final (limpieza de DOM)
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   
-  // Estado 2: Avisa al Hero que las puertas ya se están abriendo
+  // Estado 2: La "chispa" que arranca el Hero (se dispara antes que el anterior)
   const [startHero, setStartHero] = useState(false);
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export default function App() {
       {!isIntroComplete && (
         <IntroAnimation 
           onComplete={() => setIsIntroComplete(true)} 
-          onOpenDoors={() => setStartHero(true)} // <-- Nueva señal de arranque temprano
+          onOpenDoors={() => setStartHero(true)} 
         />
       )}
 
@@ -44,7 +44,7 @@ export default function App() {
         
         <Navbar />
         <main>
-          {/* El Hero ahora escucha la señal temprana, no la final */}
+          {/* Sincronizado con la señal temprana de apertura */}
           <Hero startAnimation={startHero} />
           <StatsTicker /> 
           <BentoGrid />

@@ -8,21 +8,20 @@ export default function Hero({ startAnimation }) {
   useGSAP(() => {
     if (!startAnimation) return;
 
-    // Agregamos un delay de 0.4s. Como las puertas tardan 1.4s en abrirse, 
-    // esto asegura que haya un "hueco" visual en el medio antes de que los textos suban.
+    // Delay de 0.4s: da tiempo a que la rendija de las puertas sea visible
     const tl = gsap.timeline({ 
       defaults: { ease: "power4.out" },
       delay: 0.4 
     });
     
-    // Aumenté las duraciones en ~0.4s cada una para que la animación sea más "lenta" y dramática
+    // Tiempos más largos para una sensación de fluidez "Stripe-style"
     tl.from(".hero-badge", { y: -20, opacity: 0, duration: 1.2 })
       .from(".word", { 
         y: 100, 
         rotateX: -45, 
         opacity: 0, 
-        duration: 1.4, // Era 1
-        stagger: 0.25 // Ligeramente más pausado entre palabras
+        duration: 1.4, 
+        stagger: 0.25 
       }, "-=0.6")
       .from(".hero-p", { opacity: 0, x: -20, duration: 1.2 }, "-=0.8")
       .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.8 }, "-=1")
