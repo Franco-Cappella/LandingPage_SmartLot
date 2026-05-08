@@ -9,10 +9,7 @@ import InteractiveBackground from './components/InteractiveBackground';
 import IntroAnimation from './components/IntroAnimation';
 
 export default function App() {
-  // Estado 1: Para destruir el componente de la intro al final (limpieza de DOM)
   const [isIntroComplete, setIsIntroComplete] = useState(false);
-  
-  // Estado 2: La "chispa" que arranca el Hero (se dispara antes que el anterior)
   const [startHero, setStartHero] = useState(false);
 
   useEffect(() => {
@@ -39,17 +36,25 @@ export default function App() {
         />
       )}
 
-      <div className="min-h-screen text-slate-900 selection:bg-blue-200 selection:text-blue-900 relative">
+      {/* overflow-x-hidden es CLAVE aquí para evitar scrolls horizontales accidentales */}
+      <div className="min-h-screen text-slate-900 selection:bg-blue-200 selection:text-blue-900 relative overflow-x-hidden">
+        
+        {/* Fondo interactivo */}
         <InteractiveBackground count={70} interactionRadius={150} repelForce={80} />
         
         <Navbar />
-        <main>
-          {/* Sincronizado con la señal temprana de apertura */}
+        
+        {/* Contenido Principal */}
+        <main className="relative z-10">
           <Hero startAnimation={startHero} />
+          
+          {/* StatsTicker se mantiene estático, anclando la vista */}
           <StatsTicker /> 
+          
           <BentoGrid />
           <Demo />
         </main>
+        
         <Contact />
       </div>
     </>
