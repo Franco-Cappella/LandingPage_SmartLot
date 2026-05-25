@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@remotion/google-fonts": "4.0.466",
+    "@remotion/transitions": "4.0.466",
     "gsap": "^3.15.0",
     "lucide-react": "^1.8.0",
     "react": "^19.2.5",

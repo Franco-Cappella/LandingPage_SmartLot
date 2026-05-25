@@ -1,12 +1,12 @@
 import { Composition } from "remotion";
-import SmartLotPromo from "./SmartLotPromo";
+import SmartLotPromo, { TOTAL_DURATION } from "./SmartLotPromo";
 
 export default function Root() {
   return (
     <Composition
       id="SmartLotPromo"
       component={SmartLotPromo}
-      durationInFrames={900}
+      durationInFrames={TOTAL_DURATION}
       fps={30}
       width={1920}
       height={1080}
