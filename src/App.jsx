@@ -1,31 +1,55 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
-import BentoGrid from './components/BentoGrid';
-import Demo from './components/Demo';
-import Contact from './components/Contact';
 import StatsTicker from './components/StatsTicker';
 import InteractiveBackground from './components/InteractiveBackground';
 import IntroAnimation from './components/IntroAnimation';
+
+const BentoGrid = lazy(() => import('./components/BentoGrid'));
+const Demo = lazy(() => import('./components/Demo'));
+const Contact = lazy(() => import('./components/Contact'));
+
+function SkeletonFallback() {
+  return (
+    <div className="w-full h-96 flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
 
 export default function App() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [startHero, setStartHero] = useState(false);
 
-  useEffect(() => {
-    if (!isIntroComplete) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none';
-    } else {
-      document.body.style.overflow = 'unset';
-      document.body.style.touchAction = 'unset';
-    }
+  const prefersReducedMotion = typeof window !== 'undefined'
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    return () => {
-      document.body.style.overflow = 'unset';
-      document.body.style.touchAction = 'unset';
-    };
+  useEffect(() => {
+    document.body.classList.toggle('no-scroll', !isIntroComplete);
+    return () => document.body.classList.remove('no-scroll');
   }, [isIntroComplete]);
+
+  if (prefersReducedMotion) {
+    return (
+      <div className="min-h-screen relative overflow-x-hidden bg-noise">
+        <InteractiveBackground count={70} interactionRadius={150} repelForce={80} />
+        <Navbar />
+        <main id="main-content" className="relative z-10">
+          <Hero startAnimation={true} />
+          <StatsTicker />
+          <Suspense fallback={<SkeletonFallback />}>
+            <BentoGrid />
+          </Suspense>
+          <Suspense fallback={<SkeletonFallback />}>
+            <Demo />
+          </Suspense>
+        </main>
+        <Suspense fallback={<SkeletonFallback />}>
+          <Contact />
+        </Suspense>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -36,26 +60,22 @@ export default function App() {
         />
       )}
 
-      {/* overflow-x-hidden es CLAVE aquí para evitar scrolls horizontales accidentales */}
-      <div className="min-h-screen text-slate-900 selection:bg-blue-200 selection:text-blue-900 relative overflow-x-hidden">
-        
-        {/* Fondo interactivo */}
+      <div className="min-h-screen relative overflow-x-hidden bg-noise">
         <InteractiveBackground count={70} interactionRadius={150} repelForce={80} />
-        
         <Navbar />
-        
-        {/* Contenido Principal */}
-        <main className="relative z-10">
+        <main id="main-content" className="relative z-10">
           <Hero startAnimation={startHero} />
-          
-          {/* StatsTicker se mantiene estático, anclando la vista */}
-          <StatsTicker /> 
-          
-          <BentoGrid />
-          <Demo />
+          <StatsTicker />
+          <Suspense fallback={<SkeletonFallback />}>
+            <BentoGrid />
+          </Suspense>
+          <Suspense fallback={<SkeletonFallback />}>
+            <Demo />
+          </Suspense>
         </main>
-        
-        <Contact />
+        <Suspense fallback={<SkeletonFallback />}>
+          <Contact />
+        </Suspense>
       </div>
     </>
   );

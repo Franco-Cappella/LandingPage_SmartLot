@@ -15,40 +15,49 @@ export default function StatsTicker() {
   const tickerRef = useRef();
 
   useGSAP(() => {
-    // Animación de loop infinito
-    gsap.to(".ticker-track", {
-      xPercent: -50, // Se mueve hasta la mitad (donde empieza la copia)
-      duration: 20,  // Ajusta este número para que vaya más rápido o lento
-      ease: "none",
-      repeat: -1,
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.to(".ticker-track", {
+        xPercent: -50,
+        duration: 20,
+        ease: "none",
+        repeat: -1,
+      });
     });
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set(".ticker-track", { xPercent: 0 });
+    });
+
   }, { scope: tickerRef });
 
   return (
-    <div ref={tickerRef} className="w-full bg-slate-900 py-8 overflow-hidden border-y border-slate-800">
-      <div className="ticker-track flex whitespace-nowrap w-fit">
+    <div ref={tickerRef} className="w-full bg-brand-deep py-6 overflow-hidden border-y border-white/5" aria-label="Estadísticas de la plataforma">
+      <div className="ticker-track flex whitespace-nowrap w-fit" aria-hidden="true">
         
-        {/* Renderizamos la lista dos veces para el loop infinito */}
         {[...Array(2)].map((_, idx) => (
           <div key={idx} className="flex items-center gap-12 px-6">
-            {stats.map((stat, i) => (
+            {stats.map((stat) => (
               <div 
-                key={i} 
-                className="flex items-center gap-6 min-w-[250px] group"
+                key={stat.label} 
+                className="flex items-center gap-6 min-w-0 group"
               >
-                <span className="text-4xl md:text-5xl font-black text-white group-hover:text-blue-400 transition-colors">
+                <span className="text-5xl md:text-6xl font-black text-white group-hover:text-brand-blue transition-colors duration-300 tabular-nums" style={{ fontFamily: 'var(--font-display)' }}>
                   {stat.value}
                 </span>
-                <span className="text-sm md:text-base text-slate-400 uppercase tracking-widest font-semibold leading-tight">
+                <span className="text-sm md:text-base text-white/50 uppercase tracking-widest font-semibold leading-tight whitespace-pre-line group-hover:text-white/70 transition-colors duration-300">
                   {stat.label.split(' ').join('\n')}
                 </span>
-                {/* Divisor visual entre stats */}
-                <div className="h-10 w-[1px] bg-slate-700 ml-12 hidden md:block"></div>
+                <div className="h-8 w-[1px] bg-white/10 ml-12 hidden md:block"></div>
               </div>
             ))}
           </div>
         ))}
         
+      </div>
+      <div className="sr-only" aria-live="polite" aria-atomic="true">
+        {stats.map((s) => `${s.value} ${s.label}`).join(', ')}
       </div>
     </div>
   );

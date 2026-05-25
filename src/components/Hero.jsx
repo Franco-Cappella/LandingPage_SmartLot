@@ -8,31 +8,37 @@ export default function Hero({ startAnimation }) {
   useGSAP(() => {
     if (!startAnimation) return;
 
-    // Delay de 0.4s: da tiempo a que la rendija de las puertas sea visible
-    const tl = gsap.timeline({ 
-      defaults: { ease: "power4.out" },
-      delay: 0.4 
-    });
-    
-    // Tiempos más largos para una sensación de fluidez "Stripe-style"
-    tl.from(".hero-badge", { y: -20, opacity: 0, duration: 1.2 })
-      .from(".word", { 
-        y: 100, 
-        rotateX: -45, 
-        opacity: 0, 
-        duration: 1.4, 
-        stagger: 0.25 
-      }, "-=0.6")
-      .from(".hero-p", { opacity: 0, x: -20, duration: 1.2 }, "-=0.8")
-      .from(".hero-btn", { scale: 0.8, opacity: 0, duration: 0.8 }, "-=1")
-      .from(".hero-logo-container", { x: 100, opacity: 0, duration: 1.6 }, "-=1.2");
+    const mm = gsap.matchMedia();
 
-    gsap.to(".floating-logo", {
-      y: "-=14",
-      duration: 1.66,
-      ease: "sine.inOut",
-      yoyo: true,
-      repeat: -1
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      const tl = gsap.timeline({ 
+        defaults: { ease: "power4.out" },
+        delay: 0.4 
+      });
+      
+      tl.from(".hero-badge", { y: -16, opacity: 0, duration: 1 })
+        .from(".word", { 
+          y: 80, 
+          rotateX: -30, 
+          opacity: 0, 
+          duration: 1.2, 
+          stagger: 0.2 
+        }, "-=0.5")
+        .from(".hero-p", { opacity: 0, x: -16, duration: 1 }, "-=0.6")
+        .from(".hero-btn", { scale: 0.85, opacity: 0, duration: 0.7 }, "-=0.8")
+        .from(".hero-logo-container", { x: 80, opacity: 0, duration: 1.4 }, "-=1");
+
+      gsap.to(".floating-logo", {
+        y: "-=12",
+        duration: 2,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: -1
+      });
+    });
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set([".hero-badge", ".word", ".hero-p", ".hero-btn", ".hero-logo-container"], { opacity: 1, y: 0, x: 0 });
     });
 
   }, { 
@@ -46,28 +52,28 @@ export default function Hero({ startAnimation }) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           
           <div className="text-left relative z-20">
-            <span className="hero-badge inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-blue-600 uppercase bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-blue-100">
+            <span className="hero-badge inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-brand-navy uppercase bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-brand-navy/10">
               SmartLot Prototype
             </span>
             
-            <h1 className="text-6xl md:text-8xl font-extrabold text-slate-900 leading-none mb-8">
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold leading-none mb-8 text-brand-warm" style={{ fontFamily: 'var(--font-display)' }}>
               <div className="overflow-hidden py-1"><span className="word inline-block">Gestioná.</span></div>
               <div className="overflow-hidden py-1"><span className="word inline-block">Optimizá.</span></div>
-              <div className="overflow-hidden py-1"><span className="word inline-block text-blue-600">Escalá.</span></div>
+              <div className="overflow-hidden py-1"><span className="word inline-block text-brand-blue">Escalá.</span></div>
             </h1>
             
-            <p className="hero-p text-xl text-slate-600 max-w-lg mb-10 leading-relaxed">
+            <p className="hero-p text-lg md:text-xl text-brand-muted max-w-lg mb-10 leading-relaxed">
               La plataforma SaaS que redefine el control de accesos y estacionamientos corporativos con IA.
             </p>
             
-            <button className="hero-btn px-8 py-4 bg-blue-600 text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition-all hover:shadow-xl active:scale-95">
+            <button className="hero-btn px-8 py-4 bg-brand-blue text-white rounded-xl font-bold text-lg hover:bg-brand-deep focus-visible:bg-brand-deep active:scale-95 transition-all duration-300 hover:shadow-xl shadow-lg shadow-brand-deep/20">
               Solicitar Demo Gratis
             </button>
           </div>
 
           <div className="hero-logo-container relative flex justify-center lg:justify-end z-20">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-200 rounded-full blur-[80px] opacity-40 -z-10"></div>
-            <img src="/logoEntero.png" alt="SmartLot Dashboard" className="floating-logo w-full max-w-[500px] h-auto" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-brand-navy rounded-full blur-[100px] opacity-[0.07] -z-10"></div>
+            <img src="/logoEntero.png" alt="SmartLot" width="500" height="134" className="floating-logo w-full max-w-[500px] h-auto drop-shadow-xl" />
           </div>
 
         </div>
