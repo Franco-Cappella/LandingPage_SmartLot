@@ -1,19 +1,857 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#F7F4EF" />
-    <meta name="color-scheme" content="light" />
-    <title>SmartLot — Gestión inteligente de estacionamientos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  </head>
-  <body>
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-[#FDFCF9] focus:text-[#2A5CBF] focus:rounded-lg focus:shadow-lg">Saltar al contenido principal</a>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1920" />
+  <title>SmartLot — El estacionamiento del futuro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      background: #F7F4EF;
+      font-family: "DM Sans", sans-serif;
+    }
+    .scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1920px; height: 1080px;
+      overflow: hidden;
+    }
+    #scene1 { z-index: 5; background: #F7F4EF; }
+    #scene2 { z-index: 4; background: #F7F4EF; opacity: 0; }
+    #scene3 { z-index: 3; background: #F7F4EF; opacity: 0; }
+    #scene4 { z-index: 2; background: #0C1E3F; opacity: 0; }
+    #scene5 { z-index: 1; background: #F7F4EF; opacity: 0; }
+    .scene-content {
+      width: 100%; height: 100%;
+      padding: 80px 120px;
+      display: flex; flex-direction: column;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .font-display { font-family: Archivo, sans-serif; }
+    .font-body { font-family: "DM Sans", sans-serif; }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      background: rgba(253,252,249,0.8);
+      border: 1px solid rgba(12,30,63,0.1);
+      border-radius: 9999px;
+      padding: 6px 18px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #5A6B8A;
+      width: fit-content;
+    }
+    .badge-gold { color: #C9A96E; }
+
+    .accent-rule {
+      height: 3px;
+      background: #2A5CBF;
+      border-radius: 2px;
+    }
+    .accent-rule-gold { background: #C9A96E; }
+
+    .glass-card {
+      background: rgba(253,252,249,0.55);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 32px;
+      border: 1px solid rgba(253,252,249,0.75);
+      border-bottom: 1px solid rgba(42,92,191,0.05);
+      border-right: 1px solid rgba(42,92,191,0.05);
+      box-shadow: 0 8px 32px rgba(12,30,63,0.03);
+    }
+
+    .radial-glow {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .grain-overlay {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+    /* ── Scene 1 ── */
+    .doc-panel {
+      position: absolute;
+      background: rgba(243,240,235,0.5);
+      border: 1px solid rgba(12,30,63,0.06);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex; flex-direction: column;
+      gap: 10px;
+    }
+    .doc-line {
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(12,30,63,0.08);
+    }
+    .doc-line.short { width: 60%; }
+    .doc-line.med { width: 80%; }
+
+    #s1-headline {
+      font-family: Archivo, sans-serif;
+      font-size: 76px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0E121B;
+      line-height: 1.1;
+    }
+    #s1-subhead {
+      font-family: "DM Sans", sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      color: #5A6B8A;
+      line-height: 1.5;
+    }
+
+    /* ── Scene 2 ── */
+    #s2-dashboard {
+      width: 520px;
+      padding: 32px;
+      display: flex; flex-direction: column;
+      gap: 24px;
+    }
+    .chart-bar-wrap {
+      width: 100%; height: 12px;
+      background: rgba(42,92,191,0.08);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .chart-bar {
+      height: 100%;
+      background: #2A5CBF;
+      border-radius: 6px;
+      transform-origin: left;
+    }
+    .occ-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      border: 4px solid #6C93D6;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .occ-ring-inner {
+      width: 36px; height: 36px;
+      background: rgba(42,92,191,0.1);
+      border-radius: 50%;
+    }
+    .pill-stack {
+      display: flex; flex-direction: column;
+      gap: 12px;
+    }
+    .feature-pill {
+      display: flex; align-items: center;
+      gap: 12px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: #0E121B;
+    }
+    .pill-dot {
+      width: 8px; height: 8px;
+      background: #2A5CBF;
+      border-radius: 50%;
+    }
+
+    #s2-subhead {
+      font-family: Archivo, sans-serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: #0E121B;
+      line-height: 1.15;
+    }
+    #s2-body {
+      font-family: "DM Sans", sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #5A6B8A;
+      line-height: 1.5;
+      max-width: 720px;
+    }
+
+    /* ── Scene 3 ── */
+    .grid-overlay {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(42,92,191,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(42,92,191,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+    }
+    .ghost-type {
+      position: absolute;
+      pointer-events: none;
+      font-family: Archivo, sans-serif;
+      font-weight: 800;
+      color: #0C1E3F;
+      opacity: 0.03;
+      font-size: 300px;
+      letter-spacing: -0.04em;
+      user-select: none;
+    }
+    #s3-eyebrow {
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #5A6B8A;
+    }
+    #s3-headline {
+      font-family: Archivo, sans-serif;
+      font-size: 58px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0E121B;
+      line-height: 1.1;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .feature-card {
+      background: rgba(253,252,249,0.55);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 32px;
+      border: 1px solid rgba(253,252,249,0.75);
+      border-bottom: 1px solid rgba(42,92,191,0.05);
+      border-right: 1px solid rgba(42,92,191,0.05);
+      box-shadow: 0 8px 32px rgba(12,30,63,0.03);
+      padding: 28px;
+      display: flex; flex-direction: column;
+      gap: 12px;
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      background: rgba(42,92,191,0.1);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feature-icon-dot {
+      width: 16px; height: 16px;
+      background: #2A5CBF;
+      border-radius: 4px;
+    }
+    .feature-title {
+      font-family: Archivo, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: #0E121B;
+    }
+    .feature-desc {
+      font-family: "DM Sans", sans-serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: #5A6B8A;
+      line-height: 1.5;
+    }
+
+    /* ── Scene 4 ── */
+    .ghost-stat {
+      position: absolute;
+      pointer-events: none;
+      font-family: Archivo, sans-serif;
+      font-weight: 900;
+      color: #C9A96E;
+      opacity: 0.04;
+      font-size: 200px;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+    }
+    #s4-eyebrow {
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #C9A96E;
+    }
+    #s4-headline {
+      font-family: Archivo, sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: #FDFCF9;
+      line-height: 1.15;
+    }
+    .stats-grid {
+      display: flex;
+      gap: 48px;
+    }
+    .stat-block {
+      display: flex; flex-direction: column;
+      gap: 8px;
+    }
+    .stat-num {
+      font-family: Archivo, sans-serif;
+      font-size: 84px;
+      font-weight: 900;
+      color: #FDFCF9;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: "DM Sans", sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: rgba(253,252,249,0.6);
+    }
+    .stat-underline {
+      width: 40px; height: 2px;
+      background: #C9A96E;
+      margin-top: 4px;
+      transform-origin: left;
+    }
+
+    /* ── Scene 5 ── */
+    #s5-card {
+      background: rgba(253,252,249,0.7);
+      backdrop-filter: blur(32px);
+      -webkit-backdrop-filter: blur(32px);
+      border-radius: 40px;
+      padding: 56px 72px;
+      box-shadow: 0 8px 32px rgba(12,30,63,0.03);
+      border: 1px solid rgba(253,252,249,0.8);
+      display: flex; flex-direction: column;
+      gap: 24px;
+      max-width: 900px;
+    }
+    #s5-headline {
+      font-family: Archivo, sans-serif;
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #0E121B;
+      line-height: 1.1;
+    }
+    #s5-body {
+      font-family: "DM Sans", sans-serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: #5A6B8A;
+      line-height: 1.5;
+      max-width: 700px;
+    }
+    #s5-btn {
+      display: inline-flex; align-items: center;
+      gap: 12px;
+      background: #2A5CBF;
+      color: #FDFCF9;
+      border: none;
+      border-radius: 20px;
+      padding: 18px 44px;
+      font-family: Archivo, sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      width: fit-content;
+      box-shadow: 0 8px 24px rgba(42,92,191,0.25);
+    }
+    .btn-arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+    #s5-card:hover .btn-arrow { transform: translateX(4px); }
+    #s5-logo {
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #C9A96E;
+    }
+
+    /* ── Scrollable area inside scenes ── */
+    .flex-col { display: flex; flex-direction: column; }
+    .flex-1 { flex: 1; }
+    .gap-sm { gap: 16px; }
+    .gap-md { gap: 24px; }
+    .gap-lg { gap: 48px; }
+  </style>
+</head>
+<body>
+  <div
+    id="root"
+    data-composition-id="smartlot-promo"
+    data-width="1920"
+    data-height="1080"
+    data-start="0"
+    data-duration="40"
+    data-track-index="0"
+  >
+
+    <!-- ════════════════════════════════════════════════
+         SCENE 1 — The Problem (0.0s → 7.0s)
+         ════════════════════════════════════════════════ -->
+    <div id="scene1" class="scene">
+      <div class="scene-content" style="justify-content: center; gap: 20px;">
+
+        <!-- BG glow -->
+        <div id="s1-glow" class="radial-glow"
+          style="width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);
+                 background:radial-gradient(ellipse, rgba(42,92,191,0.06) 0%, transparent 60%);">
+        </div>
+
+        <!-- Ghost grid BG -->
+        <div style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
+                    background-image:linear-gradient(rgba(42,92,191,0.06) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(42,92,191,0.06) 1px, transparent 1px);
+                    background-size:100px 100px;opacity:0.5;">
+        </div>
+
+        <!-- Doc panels (decorative) -->
+        <div class="doc-panel" id="s1-doc1"
+          style="width:240px;top:140px;right:180px;transform:rotate(-2deg);">
+          <div class="doc-line" style="width:50%"></div>
+          <div class="doc-line med"></div>
+          <div class="doc-line short"></div>
+          <div class="doc-line med"></div>
+          <div class="doc-line short"></div>
+        </div>
+        <div class="doc-panel" id="s1-doc2"
+          style="width:200px;top:260px;right:300px;transform:rotate(3deg);">
+          <div class="doc-line" style="width:45%"></div>
+          <div class="doc-line short"></div>
+          <div class="doc-line med"></div>
+          <div class="doc-line" style="width:55%"></div>
+        </div>
+        <div class="doc-panel" id="s1-doc3"
+          style="width:180px;top:380px;right:240px;transform:rotate(-4deg);">
+          <div class="doc-line med"></div>
+          <div class="doc-line short"></div>
+          <div class="doc-line" style="width:40%"></div>
+        </div>
+
+        <!-- FG Content -->
+        <div class="badge" id="s1-badge">
+          <span class="badge-gold">SmartLot</span>
+        </div>
+
+        <div id="s1-rule" class="accent-rule" style="width:80px;"></div>
+
+        <div id="s1-headline">Gestioná tu estacionamiento.</div>
+        <div id="s1-subhead">Sin planillas. Sin caos. Sin complicaciones.</div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SCENE 2 — The Solution (7.0s → 15.0s)
+         ════════════════════════════════════════════════ -->
+    <div id="scene2" class="scene">
+      <!-- BG glows -->
+      <div class="radial-glow"
+        style="width:600px;height:600px;top:60px;right:0;
+               background:radial-gradient(ellipse, rgba(42,92,191,0.05) 0%, transparent 60%);">
+      </div>
+      <div class="radial-glow" id="s2-glow2"
+        style="width:500px;height:500px;bottom:0;left:0;
+               background:radial-gradient(ellipse, rgba(12,30,63,0.03) 0%, transparent 60%);">
+      </div>
+      <div class="grain-overlay"></div>
+
+      <div class="scene-content" style="justify-content: center; gap: 24px;">
+        <!-- Dashboard preview + pills in a row -->
+        <div style="display:flex;gap:40px;align-items:flex-start;">
+          <!-- Dashboard card -->
+          <div id="s2-dashboard" class="glass-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="font-display" style="font-size:20px;font-weight:700;color:#0E121B;">Ocupación</span>
+              <div class="occ-ring" id="s2-ring">
+                <div class="occ-ring-inner"></div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="chart-bar-wrap"><div class="chart-bar" id="s2-bar1" style="width:78%"></div></div>
+              <div class="chart-bar-wrap"><div class="chart-bar" id="s2-bar2" style="width:55%"></div></div>
+              <div class="chart-bar-wrap"><div class="chart-bar" id="s2-bar3" style="width:92%"></div></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span class="font-body" style="font-size:14px;color:#5A6B8A;">09:00</span>
+              <span class="font-body" style="font-size:14px;color:#5A6B8A;">14:00</span>
+              <span class="font-body" style="font-size:14px;color:#5A6B8A;">18:00</span>
+            </div>
+          </div>
+
+          <!-- Feature pills -->
+          <div class="pill-stack" id="s2-pills">
+            <div class="feature-pill" id="s2-pill1"><span class="pill-dot"></span>Asignación IA</div>
+            <div class="feature-pill" id="s2-pill2"><span class="pill-dot"></span>Dashboard Analítico</div>
+            <div class="feature-pill" id="s2-pill3"><span class="pill-dot"></span>Acceso Móvil</div>
+          </div>
+        </div>
+
+        <!-- Text content -->
+        <div id="s2-subhead">Todo el control en un solo lugar.</div>
+        <div id="s2-body">
+          Una plataforma diseñada para eliminar el caos y modernizar la gestión de tus espacios, sin complicaciones de hardware.
+        </div>
+
+        <!-- Gold label -->
+        <div style="margin-top:8px;">
+          <span id="s2-logo" class="badge badge-gold">SmartLot</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SCENE 3 — Features (15.0s → 24.0s)
+         ════════════════════════════════════════════════ -->
+    <div id="scene3" class="scene">
+      <div class="grid-overlay"></div>
+      <div class="radial-glow"
+        style="width:700px;height:700px;top:50%;left:50%;transform:translate(-50%,-50%);
+               background:radial-gradient(ellipse, rgba(42,92,191,0.05) 0%, transparent 60%);">
+      </div>
+      <div class="ghost-type" id="s3-ghost" style="top:-40px;right:-60px;">SMARTLOT</div>
+      <div class="grain-overlay"></div>
+
+      <div class="scene-content" style="justify-content: center; gap: 20px;">
+        <div id="s3-eyebrow">Producto</div>
+        <div id="s3-rule" class="accent-rule" style="width:80px;"></div>
+        <div id="s3-headline">Cuatro pilares. Una plataforma.</div>
+
+        <div class="feature-grid" style="margin-top:8px;">
+          <div class="feature-card" id="s3-card1">
+            <div class="feature-icon"><div class="feature-icon-dot"></div></div>
+            <div class="feature-title">Asignación IA</div>
+            <div class="feature-desc">Optimización dinámica que aprende de los flujos de tu empresa para maximizar la ocupación.</div>
+          </div>
+          <div class="feature-card" id="s3-card2">
+            <div class="feature-icon"><div class="feature-icon-dot"></div></div>
+            <div class="feature-title">Dashboard Analítico</div>
+            <div class="feature-desc">Métricas en tiempo real, reportes de uso y gestión de usuarios en un solo lugar.</div>
+          </div>
+          <div class="feature-card" id="s3-card3">
+            <div class="feature-icon"><div class="feature-icon-dot"></div></div>
+            <div class="feature-title">Acceso Móvil</div>
+            <div class="feature-desc">Entrada ágil y sin contacto desde el celular. Sin tarjetas ni llaveros.</div>
+          </div>
+          <div class="feature-card" id="s3-card4">
+            <div class="feature-icon"><div class="feature-icon-dot"></div></div>
+            <div class="feature-title">Seguridad</div>
+            <div class="feature-desc">Control estricto de patentes y permisos. Solo las personas autorizadas ingresan.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SCENE 4 — Social Proof (24.0s → 33.0s)
+         ════════════════════════════════════════════════ -->
+    <div id="scene4" class="scene">
+      <!-- Golden radial glow -->
+      <div id="s4-glow" class="radial-glow"
+        style="width:900px;height:900px;top:50%;left:50%;transform:translate(-50%,-50%);
+               background:radial-gradient(ellipse, rgba(201,169,110,0.08) 0%, transparent 60%);">
+      </div>
+      <div class="grain-overlay" style="opacity:0.02;"></div>
+
+      <!-- Ghost stat numbers -->
+      <div class="ghost-stat" style="top:60px;right:-40px;">500</div>
+      <div class="ghost-stat" style="bottom:-30px;left:-20px;">1000</div>
+
+      <div class="scene-content" style="justify-content: center; gap: 24px;">
+        <div id="s4-eyebrow">Tracción</div>
+        <div id="s4-gold-rule" class="accent-rule accent-rule-gold" style="width:120px;"></div>
+        <div id="s4-headline">Empresas que ya gestionan mejor.</div>
+
+        <div class="stats-grid">
+          <div class="stat-block" id="s4-stat1">
+            <div class="stat-num" id="s4-num1">0</div>
+            <div class="stat-label">Usuarios activos</div>
+            <div class="stat-underline" id="s4-line1"></div>
+          </div>
+          <div class="stat-block" id="s4-stat2">
+            <div class="stat-num" id="s4-num2">0</div>
+            <div class="stat-label">Empresas</div>
+            <div class="stat-underline" id="s4-line2"></div>
+          </div>
+          <div class="stat-block" id="s4-stat3">
+            <div class="stat-num" id="s4-num3">0</div>
+            <div class="stat-label">Espacios gestionados</div>
+            <div class="stat-underline" id="s4-line3"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:48px;margin-top:8px;">
+          <div class="stat-block" id="s4-stat4">
+            <div class="stat-num" id="s4-num4" style="font-size:64px;">0</div>
+            <div class="stat-label">Sesiones mensuales</div>
+            <div class="stat-underline" style="background:#C9A96E;"></div>
+          </div>
+          <div class="stat-block" id="s4-stat5">
+            <div class="stat-num" id="s4-num5" style="font-size:64px;">0</div>
+            <div class="stat-label">Uptime del sistema</div>
+            <div class="stat-underline" style="background:#C9A96E;"></div>
+          </div>
+          <div class="stat-block" id="s4-stat6">
+            <div class="stat-num" id="s4-num6" style="font-size:64px;">0</div>
+            <div class="stat-label">Soporte técnico</div>
+            <div class="stat-underline" style="background:#C9A96E;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SCENE 5 — CTA (33.0s → 40.0s)
+         ════════════════════════════════════════════════ -->
+    <div id="scene5" class="scene">
+      <div class="radial-glow"
+        style="width:700px;height:700px;bottom:-100px;right:-100px;
+               background:radial-gradient(ellipse, rgba(42,92,191,0.04) 0%, transparent 60%);">
+      </div>
+      <div class="radial-glow"
+        style="width:500px;height:500px;top:0;left:0;
+               background:radial-gradient(ellipse, rgba(201,169,110,0.03) 0%, transparent 60%);">
+      </div>
+      <div class="grain-overlay"></div>
+
+      <div class="scene-content" style="justify-content: center; align-items: center;">
+        <div id="s5-card">
+          <div id="s5-headline">¿Listo para modernizar tu estacionamiento?</div>
+          <div id="s5-body">
+            Dejá de perder tiempo gestionando planillas. Implementá SmartLot hoy y mejorá la experiencia de tu equipo.
+          </div>
+          <div id="s5-btn-wrap">
+            <button id="s5-btn">
+              Solicitar Demo Gratis
+              <span class="btn-arrow">&rarr;</span>
+            </button>
+          </div>
+          <div id="s5-logo">SmartLot</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    var tl = gsap.timeline({ paused: true });
+
+    // ─── helper: stat counter ───
+    function counter(sel, from, to, prefix, startTime, dur) {
+      var o = { v: from };
+      tl.to(o, {
+        v: to,
+        duration: dur || 1.2,
+        ease: "expo.out",
+        onUpdate: function () {
+          var el = document.querySelector(sel);
+          if (el) el.textContent = (prefix || "") + Math.round(o.v);
+        }
+      }, startTime);
+    }
+
+    // ─── helper: icon dot pulse ───
+    function pulseDot(sel, start, cycle, reps) {
+      tl.to(sel, { scale: 1.15, duration: cycle / 2, ease: "sine.inOut", yoyo: true, repeat: reps }, start);
+    }
+
+    // ═══════════════════════════════════════════════════
+    // SCENE 1 (0.0 - 7.0)
+    // ═══════════════════════════════════════════════════
+
+    // Ambient — BG glow breath
+    tl.to("#s1-glow", { scale: 1.05, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 2 }, 0);
+    // Ambient — doc panels drift up
+    tl.to("#s1-doc1", { y: -24, duration: 6, ease: "none" }, 0);
+    tl.to("#s1-doc2", { y: -18, duration: 6, ease: "none" }, 0);
+    tl.to("#s1-doc3", { y: -30, duration: 6, ease: "none" }, 0.5);
+
+    // Entrance
+    tl.fromTo("#s1-badge", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 0.2);
+    tl.fromTo("#s1-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 0.5);
+    tl.fromTo("#s1-headline", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power4.out" }, 0.7);
+    tl.fromTo("#s1-subhead", { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 1.2);
+
+    // Scene 1 → 2 transition
+    tl.to("#scene1", {
+      filter: "blur(10px)", scale: 1.03, opacity: 0,
+      duration: 0.5, ease: "power2.inOut"
+    }, 6.7);
+    tl.fromTo("#scene2", {
+      filter: "blur(10px)", scale: 0.97, opacity: 0
+    }, {
+      filter: "blur(0px)", scale: 1, opacity: 1,
+      duration: 0.5, ease: "power2.inOut"
+    }, 6.8);
+
+    // Hard kill scene 1
+    tl.set("#scene1, #scene1 *", { opacity: 0, visibility: "hidden" }, 7.3);
+
+    // ═══════════════════════════════════════════════════
+    // SCENE 2 (7.0 - 15.0) — entrances start at 7.3
+    // ═══════════════════════════════════════════════════
+
+    // Ambient — glow drift
+    tl.to("#s2-glow2", { y: 20, duration: 4, ease: "sine.inOut", yoyo: true, repeat: 2 }, 7.0);
+
+    tl.fromTo("#s2-dashboard", { x: 80, opacity: 0 }, { x: 0, opacity: 1, duration: 1.0, ease: "expo.out" }, 7.3);
+    tl.fromTo("#s2-bar1", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 7.5);
+    tl.fromTo("#s2-bar2", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 7.6);
+    tl.fromTo("#s2-bar3", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 7.7);
+    tl.fromTo("#s2-ring", { rotation: 0 }, { rotation: 360, duration: 1.2, ease: "expo.out" }, 7.7);
+    tl.fromTo("#s2-pill1", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 7.9);
+    tl.fromTo("#s2-pill2", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 8.05);
+    tl.fromTo("#s2-pill3", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 8.2);
+    tl.fromTo("#s2-subhead", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: "power4.out" }, 8.3);
+    tl.fromTo("#s2-body", { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" }, 8.7);
+    tl.fromTo("#s2-logo", { opacity: 0 }, { opacity: 1, duration: 0.4, ease: "power2.out" }, 9.1);
+
+    // Dashboard ambient breath
+    tl.to("#s2-dashboard", { scale: 1.01, duration: 3, ease: "sine.inOut", yoyo: true, repeat: 1 }, 9.5);
+
+    // Scene 2 → 3 transition
+    tl.to("#scene2", {
+      filter: "blur(10px)", scale: 1.03, opacity: 0,
+      duration: 0.5, ease: "power2.inOut"
+    }, 14.7);
+    tl.fromTo("#scene3", {
+      filter: "blur(10px)", scale: 0.97, opacity: 0
+    }, {
+      filter: "blur(0px)", scale: 1, opacity: 1,
+      duration: 0.5, ease: "power2.inOut"
+    }, 14.8);
+
+    // Hard kill scene 2
+    tl.set("#scene2, #scene2 *", { opacity: 0, visibility: "hidden" }, 15.3);
+
+    // ═══════════════════════════════════════════════════
+    // SCENE 3 (15.0 - 24.0) — entrances start at 15.3
+    // ═══════════════════════════════════════════════════
+
+    // Ambient
+    tl.to("#s3-ghost", { x: -20, duration: 5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 15.0);
+
+    tl.fromTo("#s3-eyebrow", { y: -8, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power2.out" }, 15.3);
+    tl.fromTo("#s3-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "expo.out" }, 15.5);
+    tl.fromTo("#s3-headline", { x: -40, opacity: 0 }, { x: 0, opacity: 1, duration: 0.7, ease: "power4.out" }, 15.6);
+    tl.fromTo("#s3-card1", { y: 40, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 15.9);
+    tl.fromTo("#s3-card2", { y: 40, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 16.05);
+    tl.fromTo("#s3-card3", { y: 40, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 16.2);
+    tl.fromTo("#s3-card4", { y: 40, scale: 0.95, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: 0.8, ease: "expo.out" }, 16.35);
+
+    // Icon dot pulses
+    pulseDot("#s3-card1 .feature-icon-dot", 17.0, 1.5, 3);
+    pulseDot("#s3-card2 .feature-icon-dot", 17.5, 1.5, 3);
+    pulseDot("#s3-card3 .feature-icon-dot", 18.0, 1.5, 3);
+    pulseDot("#s3-card4 .feature-icon-dot", 18.5, 1.5, 3);
+
+    // Scene 3 → 4 transition
+    tl.to("#scene3", {
+      filter: "blur(10px)", scale: 1.03, opacity: 0,
+      duration: 0.5, ease: "power2.inOut"
+    }, 23.7);
+    tl.fromTo("#scene4", {
+      filter: "blur(10px)", scale: 0.97, opacity: 0
+    }, {
+      filter: "blur(0px)", scale: 1, opacity: 1,
+      duration: 0.5, ease: "power2.inOut"
+    }, 23.8);
+
+    // Hard kill scene 3
+    tl.set("#scene3, #scene3 *", { opacity: 0, visibility: "hidden" }, 24.3);
+
+    // ═══════════════════════════════════════════════════
+    // SCENE 4 (24.0 - 33.0) — entrances start at 24.3
+    // ═══════════════════════════════════════════════════
+
+    // Ambient — gold glow breath
+    tl.to("#s4-glow", { scale: 1.06, duration: 4, ease: "sine.inOut", yoyo: true, repeat: 1 }, 24.0);
+    // Ghost stat drift
+    tl.to(".ghost-stat", { y: -15, duration: 5, ease: "sine.inOut", yoyo: true, repeat: 1 }, 24.0);
+
+    tl.fromTo("#s4-eyebrow", { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, 24.3);
+    tl.fromTo("#s4-gold-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: "expo.out" }, 24.5);
+    tl.fromTo("#s4-headline", { y: -20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power4.out" }, 24.7);
+
+    // Stat counters with staggered starts
+    counter("#s4-num1", 0, 500, "+", 25.1);
+    counter("#s4-num2", 0, 20, "+", 25.25);
+    counter("#s4-num3", 0, 1000, "+", 25.4);
+
+    // Underlines expand after counter completes
+    tl.fromTo("#s4-line1", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 26.3);
+    tl.fromTo("#s4-line2", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 26.35);
+    tl.fromTo("#s4-line3", { scaleX: 0 }, { scaleX: 1, duration: 0.4, ease: "expo.out" }, 26.5);
+
+    // Second row stats
+    counter("#s4-num4", 0, 10000, "+", 26.0, 1.0);
+    counter("#s4-num5", 0, 99.9, "", 26.15, 1.0);
+    tl.call(function () {
+      var n6 = document.querySelector("#s4-num6");
+      if (n6) n6.textContent = "24/7";
+    }, null, null, 26.3);
+    tl.call(function () {
+      var l6 = document.querySelector("#s4-stat6 .stat-label");
+      if (l6) l6.textContent = "SOPORTE TÉCNICO";
+    }, null, null, 25.0);
+
+    // Scene 4 → 5 transition
+    tl.to("#scene4", {
+      filter: "blur(10px)", scale: 1.03, opacity: 0,
+      duration: 0.5, ease: "power2.inOut"
+    }, 32.7);
+    tl.fromTo("#scene5", {
+      filter: "blur(10px)", scale: 0.97, opacity: 0
+    }, {
+      filter: "blur(0px)", scale: 1, opacity: 1,
+      duration: 0.5, ease: "power2.inOut"
+    }, 32.8);
+
+    // Hard kill scene 4
+    tl.set("#scene4, #scene4 *", { opacity: 0, visibility: "hidden" }, 33.3);
+
+    // ═══════════════════════════════════════════════════
+    // SCENE 5 (33.0 - 40.0) — LAST SCENE, exit allowed
+    // ═══════════════════════════════════════════════════
+
+    tl.fromTo("#s5-card", { y: 30, opacity: 0, scale: 0.98 }, { y: 0, opacity: 1, scale: 1, duration: 0.8, ease: "power4.out" }, 33.3);
+    tl.fromTo("#s5-headline", { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, 33.7);
+    tl.fromTo("#s5-body", { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power2.out" }, 34.1);
+    tl.fromTo("#s5-btn", { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.5, ease: "back.out(1.2)" }, 34.4);
+    tl.fromTo("#s5-logo", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 34.8);
+
+    // Button pulse
+    tl.to("#s5-btn", {
+      boxShadow: "0 0 0 12px rgba(42,92,191,0)",
+      duration: 1.5, ease: "sine.inOut",
+      yoyo: true, repeat: 2
+    }, 35.5);
+
+    // ─── EXIT (LAST SCENE ONLY) ───
+    tl.to("#s5-headline", { opacity: 0, y: -15, duration: 0.8, ease: "power2.in" }, 38.0);
+    tl.to("#s5-body", { opacity: 0, y: -10, duration: 0.6, ease: "power2.in" }, 38.2);
+    tl.to("#s5-btn", { opacity: 0, scale: 0.95, duration: 0.5, ease: "power2.in" }, 38.2);
+    tl.to("#s5-logo", { opacity: 0, duration: 0.5, ease: "power2.in" }, 38.4);
+    tl.to("#s5-card", { opacity: 0, scale: 0.97, duration: 0.8, ease: "power2.in" }, 38.5);
+
+    // Final fade to navy
+    tl.to("#scene5", { backgroundColor: "#0C1E3F", duration: 0.8, ease: "power2.inOut" }, 39.0);
+
+    window.__timelines["smartlot-promo"] = tl;
+  </script>
+</body>
 </html>
