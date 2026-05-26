@@ -1,9 +1,12 @@
 import { useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
 export default function Navbar() {
   const navRef = useRef();
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
 
   useGSAP(() => {
     let mm = gsap.matchMedia();
@@ -28,7 +31,7 @@ export default function Navbar() {
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
-        <div className="flex items-center gap-3 group cursor-pointer">
+        <Link to="/" className="flex items-center gap-3 group">
           <img
             src="/logo.png"
             alt="SmartLot Logo"
@@ -37,18 +40,36 @@ export default function Navbar() {
           <span className="text-2xl md:text-3xl font-extrabold text-brand-warm tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
             SmartLot
           </span>
+        </Link>
+
+        <div className="flex items-center gap-3">
+          {isLanding && (
+            <nav className="hidden md:flex gap-8 items-center font-medium text-brand-muted">
+              <a href="#solucion" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
+                Solución
+              </a>
+              <a href="#demo" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
+                Prototipo
+              </a>
+            </nav>
+          )}
+
+          <div className="flex items-center gap-3">
+            <Link
+              to="/login"
+              className="hidden md:inline-flex px-5 py-2.5 border-2 border-brand-blue text-brand-blue rounded-lg font-semibold text-sm hover:bg-brand-blue hover:text-white active:scale-[0.97] transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFCF9]"
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              to="/register"
+              className="px-5 py-2.5 bg-brand-blue text-white rounded-lg font-semibold text-sm hover:bg-brand-deep active:scale-[0.97] transition-all duration-300 shadow-md hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-blue focus-visible:ring-offset-2 focus-visible:ring-offset-[#FDFCF9]"
+            >
+              Registrarse
+            </Link>
+          
+          </div>
         </div>
-        <nav className="hidden md:flex gap-8 items-center font-medium text-brand-muted">
-          <a href="#solucion" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
-            Solución
-          </a>
-          <a href="#demo" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
-            Prototipo
-          </a>
-          <button className="px-6 py-2.5 bg-brand-navy text-white rounded-lg hover:bg-brand-blue focus-visible:bg-brand-blue transition-all duration-300 font-semibold shadow-md hover:shadow-lg active:scale-[0.97]">
-            Solicitar Demo
-          </button>
-        </nav>
 
       </div>
     </header>

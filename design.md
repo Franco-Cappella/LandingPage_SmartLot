@@ -10,7 +10,6 @@ colors:
   accent: "#2A5CBF"
   on-accent: "#FDFCF9"
   accent-sky: "#6C93D6"
-  accent-gold: "#C9A96E"
   muted: "#5A6B8A"
 typography:
   headline:

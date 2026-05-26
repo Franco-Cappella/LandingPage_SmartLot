@@ -1,9 +1,12 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import StatsTicker from './components/StatsTicker';
 import InteractiveBackground from './components/InteractiveBackground';
 import IntroAnimation from './components/IntroAnimation';
+import Login from './views/Login';
+import Register from './views/Register';
 
 const BentoGrid = lazy(() => import('./components/BentoGrid'));
 const Demo = lazy(() => import('./components/Demo'));
@@ -17,7 +20,7 @@ function SkeletonFallback() {
   );
 }
 
-export default function App() {
+function LandingPage() {
   const [isIntroComplete, setIsIntroComplete] = useState(false);
   const [startHero, setStartHero] = useState(false);
 
@@ -37,16 +40,10 @@ export default function App() {
         <main id="main-content" className="relative z-10">
           <Hero startAnimation={true} />
           <StatsTicker />
-          <Suspense fallback={<SkeletonFallback />}>
-            <BentoGrid />
-          </Suspense>
-          <Suspense fallback={<SkeletonFallback />}>
-            <Demo />
-          </Suspense>
+          <Suspense fallback={<SkeletonFallback />}><BentoGrid /></Suspense>
+          <Suspense fallback={<SkeletonFallback />}><Demo /></Suspense>
         </main>
-        <Suspense fallback={<SkeletonFallback />}>
-          <Contact />
-        </Suspense>
+        <Suspense fallback={<SkeletonFallback />}><Contact /></Suspense>
       </div>
     );
   }
@@ -54,29 +51,39 @@ export default function App() {
   return (
     <>
       {!isIntroComplete && (
-        <IntroAnimation 
-          onComplete={() => setIsIntroComplete(true)} 
-          onOpenDoors={() => setStartHero(true)} 
+        <IntroAnimation
+          onComplete={() => setIsIntroComplete(true)}
+          onOpenDoors={() => setStartHero(true)}
         />
       )}
-
       <div className="min-h-screen relative overflow-x-hidden bg-noise">
         <InteractiveBackground count={70} interactionRadius={150} repelForce={80} />
         <Navbar />
         <main id="main-content" className="relative z-10">
           <Hero startAnimation={startHero} />
           <StatsTicker />
-          <Suspense fallback={<SkeletonFallback />}>
-            <BentoGrid />
-          </Suspense>
-          <Suspense fallback={<SkeletonFallback />}>
-            <Demo />
-          </Suspense>
+          <Suspense fallback={<SkeletonFallback />}><BentoGrid /></Suspense>
+          <Suspense fallback={<SkeletonFallback />}><Demo /></Suspense>
         </main>
-        <Suspense fallback={<SkeletonFallback />}>
-          <Contact />
-        </Suspense>
+        <Suspense fallback={<SkeletonFallback />}><Contact /></Suspense>
       </div>
     </>
   );
 }
+
+export default function App() {
+  const location = useLocation();
+  const isLanding = location.pathname === '/';
+
+  return (
+    <>
+      {isLanding && <LandingPage />}
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </>
+  );
+}
+
+
