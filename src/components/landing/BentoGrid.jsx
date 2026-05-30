@@ -12,7 +12,7 @@ const features = [
     icon: <Cpu className="w-6 h-6" aria-hidden="true" />, 
     desc: "Optimización dinámica que aprende de los flujos de tu empresa para maximizar la ocupación.", 
     size: "md:col-span-2 md:row-span-2",
-    iconBg: "bg-brand-navy/10 text-brand-navy",
+    iconBg: "bg-brand-blue/10 text-brand-blue",
     badge: "Core",
     badgeStyle: "border-brand-navy/15 text-brand-navy bg-white/90"
   },
@@ -30,7 +30,7 @@ const features = [
     icon: <Smartphone className="w-6 h-6" aria-hidden="true" />, 
     desc: "Entrada ágil y sin contacto desde el celular.", 
     size: "md:col-span-1 md:row-span-1",
-    iconBg: "bg-brand-navy/10 text-brand-navy",
+    iconBg: "bg-brand-blue/10 text-brand-blue",
     badge: null,
     badgeStyle: ""
   },
@@ -39,7 +39,7 @@ const features = [
     icon: <ShieldCheck className="w-6 h-6" aria-hidden="true" />, 
     desc: "Control estricto de patentes y permisos.", 
     size: "md:col-span-1 md:row-span-1",
-    iconBg: "bg-brand-navy/10 text-brand-navy",
+    iconBg: "bg-brand-blue/10 text-brand-blue",
     badge: null,
     badgeStyle: ""
   }
