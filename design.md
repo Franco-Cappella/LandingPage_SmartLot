@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # SmartLot — Sistema de Diseño
 
 ## Dirección Estética: Azul Señal
@@ -10,6 +11,78 @@ Inspiración: paneles de instrumentación técnica, señalética de transporte, 
 
 El sistema es **preciso, funcional y consistente** — prioriza la legibilidad operativa sobre la decoración.
 
+=======
+---
+name: SmartLot Enterprise
+colors:
+  background: "#F7F4EF"
+  on-background: "#0E121B"
+  surface: "#FDFCF9"
+  on-surface: "#0E121B"
+  primary: "#0C1E3F"
+  on-primary: "#FDFCF9"
+  accent: "#2A5CBF"
+  on-accent: "#FDFCF9"
+  accent-sky: "#6C93D6"
+  muted: "#5A6B8A"
+typography:
+  headline:
+    fontFamily: Archivo
+    fontSize: 5rem
+    fontWeight: 800
+    letterSpacing: -0.02em
+  subhead:
+    fontFamily: Archivo
+    fontSize: 3rem
+    fontWeight: 700
+  body:
+    fontFamily: DM Sans
+    fontSize: 1.25rem
+    fontWeight: 400
+    lineHeight: 1.6
+  label:
+    fontFamily: DM Sans
+    fontSize: 0.875rem
+    fontWeight: 500
+    textTransform: uppercase
+    letterSpacing: 0.06em
+  stat:
+    fontFamily: Archivo
+    fontSize: 6rem
+    fontWeight: 900
+    fontVariantNumeric: tabular-nums
+  caption:
+    fontFamily: DM Sans
+    fontSize: 1rem
+    fontWeight: 400
+rounded:
+  sm: 8px
+  md: 16px
+  lg: 32px
+  xl: 40px
+  full: 9999px
+spacing:
+  xs: 8px
+  sm: 16px
+  md: 24px
+  lg: 48px
+  xl: 64px
+motion:
+  energy: moderate
+  easing:
+    entry: "power4.out"
+    exit: "power2.in"
+    ambient: "sine.inOut"
+  duration:
+    entrance: 0.8
+    hold: 2.5
+    transition: 1.0
+  atmosphere:
+    - radial-glow
+    - subtle-grain
+    - grid-lines
+  transition: crossfade
+>>>>>>> ca3118eaca0ce7be42412fa77441bbf292201b49
 ---
 
 ## Tipografía
