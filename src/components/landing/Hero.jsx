@@ -53,7 +53,7 @@ export default function Hero({ startAnimation }) {
           
           <div className="text-left relative z-20">
             <span className="hero-badge inline-block px-4 py-1.5 mb-6 text-sm font-semibold tracking-wide text-brand-navy uppercase bg-white/80 backdrop-blur-md rounded-full shadow-sm border border-brand-navy/10">
-              SmartLot Prototype
+              SmartLot App
             </span>
             
             <h1 className="text-6xl md:text-7xl lg:text-8xl font-extrabold leading-none mb-8 text-brand-warm" style={{ fontFamily: 'var(--font-display)' }}>

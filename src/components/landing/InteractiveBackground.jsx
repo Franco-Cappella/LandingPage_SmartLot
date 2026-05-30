@@ -8,7 +8,7 @@ function seededRandom(seed) {
 }
 
 const shapes = ['circle', 'diamond', 'dot'];
-const colors = ['#2A5CBF', '#0C1E3F', '#6C93D6', '#2A5CBF'];
+const colors = ['#1E90FF', '#87CEEB', '#4169E1', '#00BFFF', '#5B9BD5'];
 
 export default function InteractiveBackground({ 
   count = 45,
@@ -92,12 +92,12 @@ export default function InteractiveBackground({
 
   return (
     <div ref={containerRef} className="fixed inset-0 z-[-1] overflow-hidden pointer-events-none bg-brand-bg">
-      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_20%_20%,rgba(42,92,191,0.04)_0%,transparent_50%),radial-gradient(ellipse_at_80%_80%,rgba(12,30,63,0.03)_0%,transparent_50%)]"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_20%_20%,rgba(30,144,255,0.04)_0%,transparent_50%),radial-gradient(ellipse_at_80%_80%,rgba(135,206,235,0.03)_0%,transparent_50%)]"></div>
       
       <div 
         className="absolute inset-0 opacity-[0.025]"
         style={{
-          backgroundImage: `linear-gradient(rgba(42,92,191,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(42,92,191,0.1) 1px, transparent 1px)`,
+          backgroundImage: `linear-gradient(rgba(135,206,235,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(135,206,235,0.1) 1px, transparent 1px)`,
           backgroundSize: '60px 60px'
         }}
       ></div>

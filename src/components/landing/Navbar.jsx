@@ -43,16 +43,7 @@ export default function Navbar() {
         </Link>
 
         <div className="flex items-center gap-3">
-          {isLanding && (
-            <nav className="hidden md:flex gap-8 items-center font-medium text-brand-muted">
-              <a href="#solucion" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
-                Solución
-              </a>
-              <a href="#demo" className="relative after:absolute after:bottom-[-2px] after:left-0 after:w-0 after:h-[2px] after:bg-brand-blue after:transition-all after:duration-300 hover:after:w-full hover:text-brand-warm focus-visible:text-brand-warm transition-colors duration-300">
-                Prototipo
-              </a>
-            </nav>
-          )}
+
 
           <div className="flex items-center gap-3">
             <Link
